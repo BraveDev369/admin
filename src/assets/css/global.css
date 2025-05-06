@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+@font-face {
+    font-family: 'Shabnam';
+    src: url('../fonts/Shabnam.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Estebdad';
+    src: url('../fonts/Estedad-Regular.ttf') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.ant-picker {
+    width: 100%;
+}
+
+form.ant-form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    max-width: 100% !important;
+}
+
+form.ant-form .ant-form-item {
+    width: 45%;
+    margin: 10px;
+}
+
+
+.ant-popconfirm-message-icon {
+    align-self: end;
+}
+
+.ant-message {
+    direction: rtl;
+}
+
+.ant-message .anticon {
+    margin-left: 8px;
+    margin-right: 0;
+}
+
+.ant-menu-item {
+    text-align: right;
+}
