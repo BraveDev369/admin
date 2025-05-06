@@ -40,7 +40,7 @@ function List({ setItems, posts }) {
 
 function mapStateToProps(state) {
   return {
-    posts: state,
+    posts: state.posts,
   };
 }
 

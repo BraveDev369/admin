@@ -1,12 +1,24 @@
 import { useMemo } from "react";
 import { Table as AntTable } from "antd";
 
-export default function Table({ data, columns, rowKey = "id", ...props }) {
+export default function Table({
+  data,
+  columns,
+  rowKey = "id",
+  loading,
+  ...props
+}) {
   const newCol = useMemo(() => {
     return columns.map((c) => ({ ...c, dataIndex: c.key }));
   }, [columns]);
 
   return (
-    <AntTable dataSource={data} columns={newCol} rowKey={rowKey} {...props} />
+    <AntTable
+      dataSource={data}
+      columns={newCol}
+      rowKey={rowKey}
+      loading={loading}
+      {...props}
+    />
   );
 }

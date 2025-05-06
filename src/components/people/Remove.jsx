@@ -1,22 +1,28 @@
 import {
-    DeleteOutlined,
-    LoadingOutlined,
-    QuestionCircleOutlined,
+  DeleteOutlined,
+  LoadingOutlined,
+  QuestionCircleOutlined,
 } from "@ant-design/icons";
 
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { removePerson } from "../../redux/actions/people";
 import request from "../../tools/request";
-import { message, Popconfirm } from "../../ui";
+import { App as AntApp, Popconfirm } from "../../ui";
 
-export default function Remove({ id, getData }) {
+export default function Remove({ id }) {
   const [loading, setLoading] = useState(false);
+
+  const dispatch = useDispatch();
+
+  const { message } = AntApp.useApp();
   function confirm() {
     setLoading(true);
     request
       .delete(`/users/${id}`)
       .then(() => {
+        dispatch(removePerson(id));
         message.success("کاربر حذف شد");
-        getData();
       })
       .catch(() => {
         message.error("عملیات با شکست مواجه شد !!!");

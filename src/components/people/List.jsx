@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { connect } from "react-redux";
-import request from "../../tools/request";
-import { Table, App as AntApp } from "../../ui";
-import { Link } from "react-router-dom";
-import Remove from "./Remove";
 import { EditOutlined, EyeOutlined } from "@ant-design/icons";
-import { setPeaple } from "../../redux/actions/people";
+import React, { useEffect } from "react";
+import { connect } from "react-redux";
+import { Link } from "react-router-dom";
+import { setPeople, setPeopleLoading } from "../../redux/actions/people";
+import request from "../../tools/request";
+import { App as AntApp, Table } from "../../ui";
+import Remove from "./Remove";
 
 const columns = [
   { title: "شماره", key: "id" },
@@ -30,11 +30,12 @@ const columns = [
     ),
   },
 ];
-function List({ setData, person }) {
-  const [loading, setLoading] = useState(false);
+
+function List({ setData, people, loading, setLoading, person }) {
   const { message } = AntApp.useApp();
 
   useEffect(() => {
+    setLoading(true);
     request
       .get("/users/")
       .then(({ data }) => {
@@ -48,18 +49,26 @@ function List({ setData, person }) {
       });
   }, []);
 
-  return <Table columns={columns} data={person} loading={loading} />;
+  return (
+    <>
+      {person.id && <div>آخرین بازدید : {person.name}</div>}
+      <Table columns={columns} data={people} loading={loading} />;
+    </>
+  );
 }
 
 function mapStateToProps(state) {
   return {
-    person: state,
+    people: state.people,
+    loading: state.peopleLoading,
+    person: state.person,
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    setData: (data) => dispatch(setPeaple(data)),
+    setData: (data) => dispatch(setPeople(data)),
+    setLoading: (loading) => dispatch(setPeopleLoading(loading)),
   };
 }
 
