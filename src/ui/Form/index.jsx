@@ -115,7 +115,6 @@ function DatePicker({ label, name, required, len, min, max, ...props }) {
 }
 
 function TextArea({ label, name, row, ...props }) {
-  console.log(label);
   return (
     <>
       <Form.Item label={label} name={name}>

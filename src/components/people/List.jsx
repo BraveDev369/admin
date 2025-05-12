@@ -1,20 +1,21 @@
 import { EditOutlined, EyeOutlined } from "@ant-design/icons";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { setPeople, setPeopleLoading } from "../../redux/actions/people";
-import request from "../../tools/request";
-import { App as AntApp, Table } from "../../ui";
+import { Table } from "../../ui";
 import Remove from "./Remove";
+
+import { getPeople } from "../../redux/actions/people";
 
 const columns = [
   { title: "شماره", key: "id" },
-  { title: "نام", key: "name" },
-  {
-    title: "آدرس",
-    key: "address",
-    render: (f, r) => `${f.city} - ${f.street} - ${r.phone}`,
-  },
+  { title: "نام", key: "username" },
+  // {
+  //   title: "آدرس",
+  //   key: "address",
+  //   render: (f, r) => `${f?.city} - ${f?.street} - ${r?.phone}`,
+  // },
+  { title: "ایمیل", key: "email" },
   {
     key: "action",
     render: (_, r) => (
@@ -31,28 +32,14 @@ const columns = [
   },
 ];
 
-function List({ setData, people, loading, setLoading, person }) {
-  const { message } = AntApp.useApp();
-
+function List({ getItems, people, loading, person }) {
   useEffect(() => {
-    setLoading(true);
-    request
-      .get("/users/")
-      .then(({ data }) => {
-        setData(data);
-      })
-      .catch(() => {
-        message.error("مشکلی در دریافت اطلاعات پیش آمد.");
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    getItems();
   }, []);
-
   return (
     <>
       {person.id && <div>آخرین بازدید : {person.name}</div>}
-      <Table columns={columns} data={people} loading={loading} />;
+      <Table columns={columns} data={people} loading={loading} />
     </>
   );
 }
@@ -67,8 +54,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    setData: (data) => dispatch(setPeople(data)),
-    setLoading: (loading) => dispatch(setPeopleLoading(loading)),
+    getItems: () => dispatch(getPeople()),
   };
 }
 

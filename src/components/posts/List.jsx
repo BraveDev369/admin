@@ -1,10 +1,10 @@
-import { EyeOutlined } from "@ant-design/icons";
-import React, { useEffect, useState } from "react";
+import { EditOutlined, EyeOutlined } from "@ant-design/icons";
+import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import request from "../../tools/request";
-import { Table, App as AntApp } from "../../ui";
-import { setPosts } from "../../redux/actions/post";
+import { getPosts, setPosts } from "../../redux/actions/post";
+import { App as AntApp, Table } from "../../ui";
+import Remove from "./Remove";
 
 const columns = [
   { title: "شماره", key: "id" },
@@ -14,28 +14,30 @@ const columns = [
     render: (_, r) => (
       <>
         <Link to={`/posts/${r.id}`}>
-          <EyeOutlined style={{ marginLeft: "8px" }} />
+          <EyeOutlined />
         </Link>
+        <Link to={`/posts/edite/${r.id}`}>
+          <EditOutlined style={{ margin: "8px" }} />
+        </Link>
+        <Remove id={r.id} />
       </>
     ),
   },
 ];
-
-function List({ setItems, posts }) {
+function List({ getItems, posts }) {
   const { message } = AntApp.useApp();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    setLoading(true);
-    request("/posts/")
-      .then(({ data }) => {
-        setItems(data);
-        message.success("اطلاعات با موفقیت دریافت شد");
-      })
-      .finally(() => setLoading(false));
+    // setLoading(true);
+    getItems();
   }, []);
 
-  return <Table columns={columns} data={posts} loading={loading} />;
+  return (
+    <>
+      <Table columns={columns} data={posts} loading={loading} />;
+    </>
+  );
 }
 
 function mapStateToProps(state) {
@@ -46,7 +48,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    setItems: (data) => dispatch(setPosts(data)),
+    getItems: () => dispatch(getPosts()),
   };
 }
 

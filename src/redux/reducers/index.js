@@ -1,13 +1,15 @@
 import { combineReducers } from "redux";
-import { people, peopleLoading, person } from "./people";
-import { post, posts } from "./post";
+import { people, peopleLoading, person, personLoading } from "./people";
+import { post, postLoading, posts } from "./post";
 
 export default combineReducers({
   people,
   peopleLoading,
+  personLoading,
   person,
   posts,
   post,
+  postLoading,
 });
 
 // const DEFAULT_STATE = { person: [], posts: [] };

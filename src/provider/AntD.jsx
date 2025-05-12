@@ -1,5 +1,5 @@
 // src/context/ThemeProvider.jsx
-import { ConfigProvider, Spin, theme as antdTheme } from "../../ui";
+import { ConfigProvider, Spin, theme as antdTheme } from "../ui";
 import JalaliProvider from "antd-jalali-v5";
 import faIR from "antd/locale/fa_IR";
 import React, { createContext, useContext, useState } from "react";

@@ -2,42 +2,40 @@ import {
   KeyOutlined,
   MailOutlined,
   PhoneOutlined,
-  UserOutlined
+  UserOutlined,
 } from "@ant-design/icons";
 
-import { Form, message, Spin } from "antd";
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Divider, Form, Spin } from "antd";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import usePerson from "../../hooks/usePerson";
+import { setPeopleLoading, updatePerson } from "../../redux/actions/people";
 import { genders } from "../../tools/constans";
 import request from "../../tools/request";
-import { useTheme } from "../provider/AntD";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+
 const { Text, Email, Password, Select, Checkbox, Submit, DatePicker } = Form;
 
 export default function Edite() {
-  const [person, setPerson] = useState({});
   const { id } = useParams();
-  const { setLoading } = useTheme();
-
   const navigate = useNavigate();
 
-  useEffect(() => {
-    request(`users/${id}`).then(({ data }) => setPerson(data));
-  }, []);
+  const { person, perLoading } = usePerson(id);
 
-  function onFinish(values) {
-    setLoading(true);
-    request
-      .put(`/users/${id}`, { data: values })
-      .then(() => {
-        navigate(`/people/${id}`);
-      })
-      .catch(() => {
-        // message.error("ارتباط ناموفق");
-      })
-      .finally(() => setLoading(false));
+  const [loading, setLoading] = useState(false);
+
+  const dispatch = useDispatch();
+
+  async function onFinish(values) {
+    try {
+      await dispatch(updatePerson(id, values));
+      navigate(`/people/${id}`);
+    } catch (err) {
+      message.error("خطا در بروزرسانی");
+    }
   }
 
-  if (!person.id) {
+  if (perLoading) {
     return <Spin fullscreen />;
   }
 
@@ -93,8 +91,10 @@ export default function Edite() {
         />
         <Select label="جنسیت" name="gender" options={genders} />
         <Checkbox label="مدیر" name="admin" />
-        <Submit />
+        <Submit loading={loading} />
       </Form>
+      <Divider />
+      <Link to="/people">لیست کاربران</Link>
     </>
   );
 }

@@ -1,9 +1,7 @@
-import React, { useEffect, useMemo } from "react";
 import { App as AntApp } from "antd";
-import { EyeOutlined } from "@ant-design/icons";
+import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import request from "../tools/request";
-import { setPerson } from "../redux/actions/people";
+import { getPerson } from "../redux/actions/people";
 
 export default function usePerson(id) {
   const { message } = AntApp.useApp();
@@ -11,9 +9,10 @@ export default function usePerson(id) {
   const dispatch = useDispatch();
 
   const person = useSelector((state) => state.person);
+  const perLoading = useSelector((state) => state.personLoading);
 
   useEffect(() => {
-    request(`/users/${id}`).then(({ data }) => dispatch(setPerson(data)));
+    dispatch(getPerson(id));
   }, [id]);
 
   const items = useMemo(
@@ -47,5 +46,5 @@ export default function usePerson(id) {
     [person]
   );
 
-  return { items };
+  return { items, person, perLoading };
 }

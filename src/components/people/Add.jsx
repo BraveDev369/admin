@@ -7,38 +7,35 @@ import {
 } from "@ant-design/icons";
 
 import { Form, App as AntApp } from "antd";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { genders } from "../../tools/constans";
 import request from "../../tools/request";
-import { useTheme } from "../provider/AntD";
+import { addPerson } from "../../redux/actions/people";
+import { useDispatch, useSelector } from "react-redux";
 
 const { Text, Email, Password, Select, Checkbox, Submit, DatePicker } = Form;
 
 export default function Add() {
-  const { setLoading } = useTheme();
   const { message } = AntApp.useApp();
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const idForAdd = useSelector((state) => state.people.length);
 
   useEffect(() => {
     message.success("خوش اومدی جون دل");
   }, []);
-  function onFinish(values) {
-    setLoading(true);
-    request("/users", { data: values })
-      .then((response) => {
-        if (response.status === 200) {
-          message.success("کاربر اضافه شد");
-          navigate("/people");
-        }
-      })
-      .catch((error) => {
-        if (error.status === 404) {
-          message.error("ارتباط ناموفق");
-        }
-      })
-      .finally(() => setLoading(false));
+  async function onFinish(values) {
+    values.id = idForAdd + 1;
+
+    try {
+      await dispatch(addPerson(values));
+      navigate("/people");
+      message.success("کاربر اضافه شد");
+    } catch (err) {
+      message.error("خطا در بروزرسانی");
+    }
   }
   return (
     <div>
